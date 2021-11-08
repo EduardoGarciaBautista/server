@@ -18,7 +18,12 @@ initConnection();
 //Routes
 app.use('/api/users', require('./routes/users.routes'));
 
-app.use('/api/login', require('./routes/auth.routes'))
+app.use('/api/login', require('./routes/auth.routes'));
+
+app.use('/api/hospitals', require('./routes/hospitals.route'));
+
+app.use('/api/medicos', require('./routes/medicos.routes'));
+
 
 app.listen(process.env.PORT, () => {
     console.log('Server running at port: ', process.env.PORT)
