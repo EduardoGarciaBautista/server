@@ -1,13 +1,13 @@
 const {Router} = require('express');
 const {check} = require('express-validator');
-const {validateFields} = require("../middlewares/validate-fields");
+const {validateFields} = require('../middlewares/validate-fields');
 const {
     getUsers,
     createUser,
     updateUser,
     deleteUser
 } = require('../controllers/users.controller');
-const {validateJwt} = require("../middlewares/validate-jwt");
+const {validateJwt} = require('../middlewares/validate-jwt');
 
 const router = Router();
 

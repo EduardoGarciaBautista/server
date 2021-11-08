@@ -24,6 +24,8 @@ app.use('/api/hospitals', require('./routes/hospitals.route'));
 
 app.use('/api/medicos', require('./routes/medicos.routes'));
 
+app.use('/api/search', require('./routes/search.route'));
+
 
 app.listen(process.env.PORT, () => {
     console.log('Server running at port: ', process.env.PORT)
