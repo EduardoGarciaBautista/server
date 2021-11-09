@@ -26,6 +26,8 @@ app.use('/api/medicos', require('./routes/medicos.routes'));
 
 app.use('/api/search', require('./routes/search.route'));
 
+app.use('/api/upload', require('./routes/upload.routes'));
+
 
 app.listen(process.env.PORT, () => {
     console.log('Server running at port: ', process.env.PORT)
