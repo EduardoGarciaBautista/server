@@ -1,7 +1,8 @@
-const  {response} = require('express');
+const {response} = require('express');
 const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const {generateJWT} = require("../helpers/jwt");
+const {googleVerify} = require("../helpers/google-verify");
 
 
 const login = async (req, response = response) => {
@@ -32,12 +33,11 @@ const login = async (req, response = response) => {
 
         const token = await generateJWT(user.id);
 
-        response.status(500).json({
+        response.status(200).json({
             ok: true,
             jwt: token
         });
     } catch (e) {
-        console.log(e);
         response.status(500).json({
             ok: false,
             msh: 'Internal server error'
@@ -45,7 +45,51 @@ const login = async (req, response = response) => {
     }
 }
 
+const googleSignIn = async (req, response = response) => {
+    const token = req.body.token;
+    try {
+        const {name, email, picture} = await googleVerify(token);
+
+        // Verify email exists
+        const userExists = await User.findOne({email});
+
+        let user;
+        if (!userExists) {
+            user = new User({
+                name,
+                email,
+                picture,
+                password: 'empty',
+                google: true
+            });
+        } else {
+            user = userExists;
+            user.google = true;
+            user.password = 'empty';
+        }
+
+        // Save user
+
+        await user.save();
+        // Generate jwt
+        const generatedToken = await generateJWT(user.id);
+
+
+        response.status(200).json({
+            ok: true,
+            msg: 'OK',
+            token: generatedToken
+        });
+    } catch (e) {
+        response.status(402).json({
+            ok: false,
+            msg: 'Invalid token',
+            e
+        });
+    }
+}
 
 module.exports = {
-    login
+    login,
+    googleSignIn
 }
