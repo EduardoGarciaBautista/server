@@ -38,18 +38,59 @@ const createMedico = async (req, resp = response) => {
     }
 }
 
-const updateMedico = (req, resp = response) => {
-    resp.json({
-        ok: true,
-        msg: 'getHospitals'
-    });
+const updateMedico = async (req, resp = response) => {
+    const {id} = req.params;
+    try {
+        const medico = await Medico.findById(id);
+
+        if (!medico) {
+            resp.status(404).json({
+                ok: false,
+                msg: 'Medico not found'
+            });
+        }
+
+        const changes = {
+            ...req.body,
+        }
+        const updatedMedico = await Medico.findByIdAndUpdate(id, changes, {new : true});
+        resp.json({
+            ok: true,
+            updatedMedico
+        });
+    } catch (e) {
+        resp.status(500).json({
+            ok: false,
+            msg: 'Internal server error',
+            e
+        });
+    }
 }
 
-const deleteMedico = (req, resp = response) => {
-    resp.json({
-        ok: true,
-        msg: 'getHospitals'
-    });
+const deleteMedico = async (req, resp = response) => {
+    const {id} = req.params;
+    try {
+        const medico = Medico.findById(id);
+
+        if (!medico) {
+            resp.status(404).json({
+                ok: false,
+                msg: 'Medico not found'
+            });
+        }
+
+        await Medico.findByIdAndDelete(id);
+
+        resp.status(200).json({
+            ok: true,
+            msg: 'Medico deleted'
+        });
+    } catch (e) {
+        resp.status(500).json({
+            ok: false,
+            msg: 'Internal server error',
+        });
+    }
 }
 
 

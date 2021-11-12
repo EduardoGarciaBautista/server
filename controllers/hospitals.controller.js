@@ -38,18 +38,68 @@ const createHospital = async (req, resp = response) => {
     }
 }
 
-const updateHospital = (req, resp = response) => {
-    resp.json({
-        ok: true,
-        msg: 'getHospitals'
-    });
+const updateHospital = async (req, resp = response) => {
+
+    try {
+
+        const {id} = req.params;
+        const {uid} = req;
+
+        let hospital = Hospital.findById(id);
+        if (!hospital) {
+            resp.status(404).json({
+                ok: false,
+                msg: 'Invalid hospital'
+            });
+        }
+
+        const changes = {
+            ...req.body,
+            user: uid
+        }
+        const updatedHospital = await Hospital.findByIdAndUpdate(id, changes, {new: true})
+        resp.status(200).json({
+            ok: true,
+            msg: 'OK',
+            updatedHospital
+        });
+
+    } catch (e) {
+        resp.status(500).json({
+            ok: false,
+            msg: 'Internal server error'
+        });
+    }
 }
 
-const deleteHospital = (req, resp = response) => {
-    resp.json({
-        ok: true,
-        msg: 'getHospitals'
-    });
+const deleteHospital = async (req, resp = response) => {
+
+    try {
+
+        const {id} = req.params;
+        const {uid} = req;
+
+        let hospital = Hospital.findById(id);
+        if (!hospital) {
+            resp.status(404).json({
+                ok: false,
+                msg: 'Invalid hospital'
+            });
+        }
+
+        await Hospital.findByIdAndDelete(id);
+
+        resp.status(200).json({
+            ok: true,
+            msg: 'Hospital deleted',
+        });
+
+    } catch (e) {
+        resp.status(500).json({
+            ok: false,
+            msg: 'Internal server error'
+        });
+    }
 }
 
 
