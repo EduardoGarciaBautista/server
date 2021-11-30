@@ -11,7 +11,7 @@ router.use(expressFileUpload());
 
 router.put('/:type/:id', validateJwt, fileUpload);
 
-router.get('/:type/:file', validateJwt, listFiles);
+router.get('/:type/:file', listFiles);
 
 
 module.exports = router;
